@@ -2,10 +2,11 @@
 
 1. Collect 5 letter words
 2. create env 
-3. crete API endpoints
-4. write backend logic
-5. connect logic to APIs
-6. Figure out the UI
+4. Test case driven approach
+5. crete API endpoints
+6. write backend logic
+7. connect logic to APIs
+8. Figure out the UI
 
 ## Tech details
 

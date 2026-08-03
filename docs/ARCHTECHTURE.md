@@ -22,6 +22,8 @@
 
 /create
 
+    params: user_id
+    check-limit()
     get-word()
     load-gamepage()
     start-game()
@@ -35,9 +37,11 @@
     check-word()
 
 
+
 /game-end
 
     success() / failure()
+    ensure failed game are put back to current users pool
 
 /dashboard
     params- token 
