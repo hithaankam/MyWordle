@@ -9,12 +9,13 @@
 /login
 
     params: username/email, password
-    return token
+    return token, role, checkbox
     redirects to corresponding dashboard
     Think about strong jwt auth!!
 
 /register
 
+    Think about admin register
     params: username/email, password re-type password
     redirects to corresponding dashboard
     return token
@@ -33,6 +34,7 @@
 /guess
 
     input()
+    check-word-in-dict()
     check-letter()
     check-word()
 
@@ -59,4 +61,9 @@
 
 ## Good details
 
-For each use new game is not a random word but an id picked and checked if duplicate
+1. For each use new game is not a random word but an id picked and checked if duplicate
+
+2. Incase multiple errors in an event buy user all errors should be displayed at one
+
+3. usernames are case-insensitive
+

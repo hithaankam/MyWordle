@@ -1,4 +1,4 @@
-User- username/email, id, password_heash, role
+User- username/email, id, password_hash, role
 
 games- uid, game-id, word_id, status, time, guesses-used
 
