@@ -1,4 +1,4 @@
-#from auth import register_user, login_user, create_admin
+from auth import register_user, login_user, create_admin
 
 def test_player_can_register_with_valid_credentials():
     result = register_user(
