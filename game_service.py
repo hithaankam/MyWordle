@@ -11,7 +11,7 @@ from random import choice
 DAILY_GAME_LIMIT = 3
 
 
-def start_game(username):
+def start_game(username, word = None):
     session = SessionLocal()
 
     try:
