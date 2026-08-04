@@ -1,12 +1,13 @@
 from dataclasses import dataclass, field
-from sqlalchemy import Column, Integer, String
+from datetime import datetime
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 from database import Base
 
 @dataclass
 class Result:
     success: bool
     errors: list[str] = field(default_factory=list)
-
+    game_id: int | None = None
 class User(Base):
     __tablename__ = "users"
 
@@ -26,4 +27,47 @@ class User(Base):
     role = Column(
         String(20),
         nullable=False
+    )
+
+class Word(Base):
+    __tablename__ = "words"
+
+    id = Column(Integer, primary_key=True)
+
+    word = Column(String(5), unique=True, nullable=False)
+
+
+class Game(Base):
+    __tablename__ = "games"
+
+    id = Column(Integer, primary_key=True)
+
+    user_id = Column(
+        Integer,
+        ForeignKey("users.id"),
+        nullable=False
+    )
+
+    word_id = Column(
+        Integer,
+        ForeignKey("words.id"),
+        nullable=False
+    )
+
+    status = Column(
+        String(20),
+        nullable=False,
+        default="ACTIVE"
+    )
+
+    guesses_used = Column(
+        Integer,
+        nullable=False,
+        default=0
+    )
+
+    started_at = Column(
+        DateTime,
+        nullable=False,
+        default=datetime.now
     )
