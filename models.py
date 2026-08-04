@@ -11,6 +11,7 @@ class Result:
     colors: list | None = None
     game_status: str | None = None
     message: str | None = None
+
 class User(Base):
     __tablename__ = "users"
 
@@ -101,3 +102,22 @@ class Guess(Base):
         nullable=False,
         default=datetime.now
     )
+
+from dataclasses import dataclass, field
+
+
+@dataclass
+class DailyReport:
+    success: bool
+    errors: list[str] = field(default_factory=list)
+
+    users: int = 0
+    correct_guesses: int = 0
+
+
+@dataclass
+class UserReport:
+    success: bool
+    errors: list[str] = field(default_factory=list)
+
+    history: list = field(default_factory=list)
