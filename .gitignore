@@ -1,0 +1,15 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+
+# Pytest cache
+.pytest_cache/
+
+# SQLite database
+*.db
+
+# Virtual environments
+wordle/
+venv/
+.venv/
+env/
