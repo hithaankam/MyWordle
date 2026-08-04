@@ -77,3 +77,11 @@ Business Logic
 4. admins are created manually, login has a register as admin checkbox to validate 
 
 5. status for game is win/lose/active
+
+6. ensure that users prev game progress is re-stored
+
+7. Think about how user details will be propogated accross pages
+
+8. word assign from 20 words db check if guess word is valid form the other textfile
+
+9. modularise the code
