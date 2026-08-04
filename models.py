@@ -8,6 +8,7 @@ class Result:
     success: bool
     errors: list[str] = field(default_factory=list)
     game_id: int | None = None
+    colors: list | None = None
 class User(Base):
     __tablename__ = "users"
 
@@ -67,6 +68,33 @@ class Game(Base):
     )
 
     started_at = Column(
+        DateTime,
+        nullable=False,
+        default=datetime.now
+    )
+
+class Guess(Base):
+    __tablename__ = "guesses"
+
+    id = Column(Integer, primary_key=True)
+
+    game_id = Column(
+        Integer,
+        ForeignKey("games.id"),
+        nullable=False
+    )
+
+    guess_number = Column(
+        Integer,
+        nullable=False
+    )
+
+    guessed_word = Column(
+        String(5),
+        nullable=False
+    )
+
+    submitted_at = Column(
         DateTime,
         nullable=False,
         default=datetime.now
