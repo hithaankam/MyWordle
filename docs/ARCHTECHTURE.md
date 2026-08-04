@@ -3,6 +3,13 @@
 
     Landing Page -> Login / Register -> AuthenticateUsername + Password -> Check Role in Database = Admin/player
 
+2. Implementation flow
+
+Browser
+    ↓
+Flask
+    ↓
+Business Logic
 
 ## API End points
 
@@ -15,7 +22,7 @@
 
 /register
 
-    Think about admin register
+    Think about admin register-Admin accounts are seeded into the database or created manually.
     params: username/email, password re-type password
     redirects to corresponding dashboard
     return token
@@ -63,7 +70,10 @@
 
 1. For each use new game is not a random word but an id picked and checked if duplicate
 
-2. Incase multiple errors in an event buy user all errors should be displayed at one
+2. Incase multiple errors in an event but user all errors should be displayed at one
 
 3. usernames are case-insensitive
 
+4. admins are created manually, login has a register as admin checkbox to validate 
+
+5. status for game is win/lose/active
