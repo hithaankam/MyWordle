@@ -80,18 +80,23 @@ def submit_guess(game_id, guess):
 
         game.guesses_used = len(previous_guesses) + 1
 
+        message = None
+
         if engine.is_won():
             game.status = "WON"
+            message = "Congratulations! You guessed the word."
 
         elif engine.is_lost():
             game.status = "LOST"
+            message = "Better luck next time."
 
         session.commit()
 
-        result = Result(success=True)
-        result.colors = colors
-
-        return result
-
+        return Result(
+            success=True,
+            colors=colors,
+            game_status=game.status,
+            message=message
+        )
     finally:
         session.close()

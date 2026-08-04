@@ -9,6 +9,8 @@ class Result:
     errors: list[str] = field(default_factory=list)
     game_id: int | None = None
     colors: list | None = None
+    game_status: str | None = None
+    message: str | None = None
 class User(Base):
     __tablename__ = "users"
 

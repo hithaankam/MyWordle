@@ -147,3 +147,66 @@ def test_game_status_changes_to_lost():
     game = get_game(game.game_id)
 
     assert game.status == "LOST"
+
+def test_game_returns_active_status_after_wrong_guess():
+    register_user(
+        username="GuessPlayer09",
+        password="Pass1$",
+        confirm_password="Pass1$"
+    )
+
+    game = start_game("GuessPlayer09")
+
+    result = submit_guess(
+        game.game_id,
+        "ZZZZZ"
+    )
+
+    assert result.success
+    assert result.game_status == "ACTIVE"
+    assert result.message is None
+
+def test_game_returns_win_status():
+    register_user(
+        username="GuessPlayer10",
+        password="Pass1$",
+        confirm_password="Pass1$"
+    )
+
+    game = start_game(
+        "GuessPlayer10",
+        word="APPLE"
+    )
+
+    result = submit_guess(
+        game.game_id,
+        "APPLE"
+    )
+
+    assert result.success
+    assert result.game_status == "WON"
+    assert result.message == "Congratulations! You guessed the word."
+
+def test_game_returns_loss_status():
+    register_user(
+        username="GuessPlayer11",
+        password="Pass1$",
+        confirm_password="Pass1$"
+    )
+
+    game = start_game(
+        "GuessPlayer11",
+        word="APPLE"
+    )
+
+    for _ in range(4):
+        submit_guess(game.game_id, "ZZZZZ")
+
+    result = submit_guess(
+        game.game_id,
+        "ZZZZZ"
+    )
+
+    assert result.success
+    assert result.game_status == "LOST"
+    assert result.message == "Better luck next time."
