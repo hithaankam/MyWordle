@@ -4,20 +4,31 @@
   <div class="card-body">
     <h2 class="card-title">User Report</h2>
     {% if report.success %}
-      <table class="table table-striped">
-        <thead>
-          <tr><th>Date</th><th>Games</th><th>Wins</th></tr>
-        </thead>
-        <tbody>
-          {% for item in report.history %}
-            <tr>
-              <td>{{ item.date }}</td>
-              <td>{{ item.words_tried }}</td>
-              <td>{{ item.correct_guesses }}</td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+      {% if report.history %}
+        {% for user_report in report.history %}
+          <h4 class="mt-4">{{ user_report.username }}</h4>
+          {% if user_report.history %}
+            <table class="table table-striped">
+              <thead>
+                <tr><th>Date</th><th>Games</th><th>Wins</th></tr>
+              </thead>
+              <tbody>
+                {% for item in user_report.history %}
+                  <tr>
+                    <td>{{ item.date }}</td>
+                    <td>{{ item.words_tried }}</td>
+                    <td>{{ item.correct_guesses }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          {% else %}
+            <p class="text-muted">No game history for this user yet.</p>
+          {% endif %}
+        {% endfor %}
+      {% else %}
+        <p class="text-muted">No user reports available yet.</p>
+      {% endif %}
     {% else %}
       <p class="text-muted">{{ report.errors[0] }}</p>
     {% endif %}

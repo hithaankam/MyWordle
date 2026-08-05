@@ -8,13 +8,23 @@
           <h2 class="card-title mb-0">Wordle Game</h2>
           <span class="badge bg-info text-dark">{{ game.status }}</span>
         </div>
-        <form method="post">
+        <form method="post" id="guess-form">
           <input type="hidden" name="game_id" value="{{ game.id }}">
           <div class="input-group">
-            <input class="form-control" maxlength="5" minlength="5" name="guess" placeholder="Enter 5-letter word" required>
+            <input class="form-control" id="guess-input" maxlength="5" minlength="5" name="guess" placeholder="Enter 5-letter word" required>
             <button class="btn btn-primary" type="submit">Submit</button>
           </div>
         </form>
+
+        <div class="mt-3">
+          <div class="d-flex flex-wrap gap-2">
+            {% for letter in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' %}
+              {% set state = keyboard_states.get(letter, 'NONE') %}
+              <button class="btn btn-outline-secondary btn-sm keyboard-key keyboard-{{ state|lower }}" type="button" onclick="appendLetter('{{ letter }}')">{{ letter }}</button>
+            {% endfor %}
+            <button class="btn btn-outline-danger btn-sm" type="button" onclick="clearGuess()">Clear</button>
+          </div>
+        </div>
 
         <div class="mt-4">
           {% if guesses %}
@@ -30,6 +40,15 @@
           {% else %}
             <p class="text-muted">No guesses yet. Start with a 5-letter word.</p>
           {% endif %}
+
+          {% set remaining_rows = 5 - guesses|length %}
+          {% for _ in range(remaining_rows) %}
+            <div class="d-flex gap-2 mb-2">
+              {% for _ in range(5) %}
+                <div class="tile tile-empty"></div>
+              {% endfor %}
+            </div>
+          {% endfor %}
         </div>
       </div>
     </div>
@@ -47,4 +66,23 @@
     </div>
   </div>
 </div>
+<script>
+  function appendLetter(letter) {
+    const input = document.getElementById('guess-input');
+    if (!input) {
+      return;
+    }
+    const currentValue = input.value || '';
+    if (currentValue.length < 5) {
+      input.value = currentValue + letter;
+    }
+  }
+
+  function clearGuess() {
+    const input = document.getElementById('guess-input');
+    if (input) {
+      input.value = '';
+    }
+  }
+</script>
 {% endblock %}

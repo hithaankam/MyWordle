@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="position-relative text-center">
+
+    <img
+        src="{{ url_for('static', filename='images/home.png') }}"
+        class="img-fluid rounded shadow"
+        alt="Wordle Home">
+<div class="position-absolute start-50 translate-middle-x text-center"
+     style="top: 62%;">
+        <a href="{{ url_for('auth.login') }}"
+           class="btn btn-primary btn-lg px-5 py-3 mx-3"">
+            Login
+        </a>
+
+        <a href="{{ url_for('auth.register') }}"
+           class="btn btn-success btn-lg px-5 py-3 mx-3">
+            Register
+        </a>
+    </div>
+
+</div>
+{% endblock %}
