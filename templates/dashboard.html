@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-12">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h2 class="card-title">Welcome, {{ user.username }}!</h2>
+        <p class="text-muted">Play a new Wordle game or continue one of your active games.</p>
+        <div class="d-flex flex-wrap gap-2">
+          <a class="btn btn-primary" href="{{ url_for('game.play_game') }}">Start New Game</a>
+          <a class="btn btn-outline-secondary" href="{{ url_for('game.play_game') }}">Resume Game</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h4 class="card-title">Active Games</h4>
+        {% if active_games %}
+          <ul class="list-group list-group-flush">
+            {% for game in active_games %}
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>Game #{{ game.id }} • started {{ game.started_at.strftime('%Y-%m-%d') }}</span>
+                <a class="btn btn-sm btn-outline-primary" href="{{ url_for('game.play_game', game_id=game.id) }}">Resume</a>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="text-muted mb-0">No active games right now.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h4 class="card-title">Finished Games</h4>
+        {% if finished_games %}
+          <ul class="list-group list-group-flush">
+            {% for game in finished_games %}
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>Game #{{ game.id }} • {{ game.status }}</span>
+                <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('game.play_game', game_id=game.id) }}">View</a>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="text-muted mb-0">No finished games yet.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

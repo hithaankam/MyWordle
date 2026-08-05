@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card shadow-sm">
+  <div class="card-body">
+    <h2 class="card-title">User Report</h2>
+    {% if report.success %}
+      <table class="table table-striped">
+        <thead>
+          <tr><th>Date</th><th>Games</th><th>Wins</th></tr>
+        </thead>
+        <tbody>
+          {% for item in report.history %}
+            <tr>
+              <td>{{ item.date }}</td>
+              <td>{{ item.words_tried }}</td>
+              <td>{{ item.correct_guesses }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="text-muted">{{ report.errors[0] }}</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-12">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h2 class="card-title">Admin Dashboard</h2>
+        <p class="text-muted">Review daily activity and user-specific performance.</p>
+        <div class="d-flex flex-wrap gap-2">
+          <a class="btn btn-primary" href="{{ url_for('reports.daily_report') }}">Daily Report</a>
+          <a class="btn btn-outline-secondary" href="{{ url_for('reports.user_report', username='admin') }}">User Report</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h5 class="card-title">Users</h5>
+        <p class="display-6 mb-0">{{ user_count }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h5 class="card-title">Games</h5>
+        <p class="display-6 mb-0">{{ game_count }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h5 class="card-title">Wins</h5>
+        <p class="display-6 mb-0">{{ win_count }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

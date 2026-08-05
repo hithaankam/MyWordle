@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-lg-8">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h2 class="card-title mb-0">Wordle Game</h2>
+          <span class="badge bg-info text-dark">{{ game.status }}</span>
+        </div>
+        <form method="post">
+          <input type="hidden" name="game_id" value="{{ game.id }}">
+          <div class="input-group">
+            <input class="form-control" maxlength="5" minlength="5" name="guess" placeholder="Enter 5-letter word" required>
+            <button class="btn btn-primary" type="submit">Submit</button>
+          </div>
+        </form>
+
+        <div class="mt-4">
+          {% if guesses %}
+            {% for guess in guesses %}
+              <div class="d-flex gap-2 mb-2">
+                {% set colors = guess_colors_by_number.get(guess.guess_number|string, []) %}
+                {% for letter in guess.guessed_word %}
+                  {% set color = colors[loop.index0] if colors|length > loop.index0 else 'GREY' %}
+                  <div class="tile tile-{{ color }}">{{ letter }}</div>
+                {% endfor %}
+              </div>
+            {% endfor %}
+          {% else %}
+            <p class="text-muted">No guesses yet. Start with a 5-letter word.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h4 class="card-title">Game Info</h4>
+        <p class="mb-2"><strong>Guesses used:</strong> {{ game.guesses_used }}</p>
+        <p class="mb-2"><strong>Max guesses:</strong> 5</p>
+        <p class="mb-0"><strong>Word length:</strong> 5</p>
+        <a class="btn btn-outline-secondary mt-3" href="{{ url_for('dashboard.player_dashboard') }}">Back to Dashboard</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

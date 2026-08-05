@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card shadow-sm">
+  <div class="card-body">
+    <h2 class="card-title">Daily Report</h2>
+    <p class="text-muted">Summary for today.</p>
+    <table class="table table-striped">
+      <tbody>
+        <tr><th>Date</th><td>{{ report.success and 'Today' or 'Unavailable' }}</td></tr>
+        <tr><th>Users</th><td>{{ report.users }}</td></tr>
+        <tr><th>Games</th><td>{{ report.users }}</td></tr>
+        <tr><th>Wins</th><td>{{ report.correct_guesses }}</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
