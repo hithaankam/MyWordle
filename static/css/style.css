@@ -1,0 +1,47 @@
+:root {
+  color-scheme: light;
+}
+
+body {
+  font-family: Arial, sans-serif;
+}
+
+.card {
+  border: none;
+  border-radius: 1rem;
+}
+
+.navbar-brand {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.tile {
+  width: 52px;
+  height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  font-weight: bold;
+  font-size: 1.25rem;
+  text-transform: uppercase;
+  color: white;
+  background-color: #6c757d;
+}
+
+.tile-GREEN {
+  background-color: #2e8b57;
+}
+
+.tile-ORANGE {
+  background-color: #f4a300;
+}
+
+.tile-GREY {
+  background-color: #6c757d;
+}
+
+.table th {
+  width: 35%;
+}
