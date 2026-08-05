@@ -74,6 +74,7 @@ def play_game():
         word = db.query(Word).filter(Word.id == game.word_id).first()
 
         guess_colors_by_number = {}
+        keyboard_states = {}
         if guesses:
             secret_word = word.word
             engine = WordleEngine(secret_word)
@@ -84,6 +85,16 @@ def play_game():
                     for state in colors
                 ]
 
+                for index, letter in enumerate(guess.guessed_word):
+                    color = guess_colors_by_number[str(guess.guess_number)][index]
+                    existing_state = keyboard_states.get(letter.upper())
+                    if color == "GREEN":
+                        keyboard_states[letter.upper()] = "GREEN"
+                    elif color == "ORANGE" and existing_state != "GREEN":
+                        keyboard_states[letter.upper()] = "ORANGE"
+                    elif color == "GREY" and existing_state not in {"GREEN", "ORANGE"}:
+                        keyboard_states[letter.upper()] = "GREY"
+
         return render_template(
             "game.html",
             game=game,
@@ -91,6 +102,7 @@ def play_game():
             word=word,
             user=user,
             guess_colors_by_number=guess_colors_by_number,
+            keyboard_states=keyboard_states,
         )
     finally:
         db.close()

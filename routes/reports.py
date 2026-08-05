@@ -15,11 +15,11 @@ def daily_report():
     return render_template("daily_report.html", report=report)
 
 
-@reports_bp.route("/reports/user/<username>")
-def user_report(username):
+@reports_bp.route("/reports/user")
+def user_report():
     if "user_id" not in session or session.get("role") != "ADMIN":
         flash("Please log in as an admin.", "warning")
         return redirect(url_for("auth.login"))
 
-    report = get_user_report(username)
-    return render_template("user_report.html", report=report, username=username)
+    report = get_user_report(None)
+    return render_template("user_report.html", report=report, username=None)
