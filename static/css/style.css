@@ -42,6 +42,30 @@ body {
   background-color: #6c757d;
 }
 
+.tile-empty {
+  background-color: #f8f9fa;
+  border: 1px solid #d9d9d9;
+  color: #adb5bd;
+}
+
+.keyboard-key.keyboard-green {
+  background-color: #6aaa64;
+  border-color: #6aaa64;
+  color: #ffffff;
+}
+
+.keyboard-key.keyboard-orange {
+  background-color: #c9b458;
+  border-color: #c9b458;
+  color: #ffffff;
+}
+
+.keyboard-key.keyboard-grey {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  color: #ffffff;
+}
+
 .table th {
   width: 35%;
 }
