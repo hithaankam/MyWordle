@@ -4,6 +4,7 @@ from database import SessionLocal
 from game_service import start_game
 from guess_service import submit_guess
 from models import Game, Guess, User, Word
+from game_engine import WordleEngine
 
 
 game_bp = Blueprint("game", __name__)
@@ -20,19 +21,6 @@ def play_game():
         user = db.query(User).filter(User.id == session["user_id"]).first()
         game_id = request.args.get("game_id")
         game = None
-        guess_colors = session.get("guess_colors", {}) or {}
-        if not isinstance(guess_colors, dict):
-            guess_colors = {}
-
-        normalized_guess_colors = {}
-        for game_key, color_map in guess_colors.items():
-            if not isinstance(color_map, dict):
-                continue
-            normalized_color_map = {}
-            for guess_key, colors in color_map.items():
-                normalized_color_map[str(guess_key)] = colors
-            normalized_guess_colors[str(game_key)] = normalized_color_map
-        guess_colors = normalized_guess_colors
 
         if request.method == "POST":
             game_id = request.form.get("game_id")
@@ -52,23 +40,6 @@ def play_game():
                 else:
                     if result.message:
                         flash(result.message, "success" if result.game_status == "WON" else "info")
-
-                    if result.colors is not None:
-                        latest_guess = (
-                            db.query(Guess)
-                            .filter(Guess.game_id == game_id)
-                            .order_by(Guess.guess_number.desc())
-                            .first()
-                        )
-                        if latest_guess is not None:
-                            color_values = [
-                                state.value if hasattr(state, "value") else str(state)
-                                for state in result.colors
-                            ]
-                            color_map = guess_colors.get(str(game_id), {})
-                            color_map[str(latest_guess.guess_number)] = color_values
-                            guess_colors[str(game_id)] = color_map
-                            session["guess_colors"] = guess_colors
 
             return redirect(url_for("game.play_game", game_id=game_id))
 
@@ -101,7 +72,18 @@ def play_game():
             .all()
         )
         word = db.query(Word).filter(Word.id == game.word_id).first()
-        guess_colors_by_number = guess_colors.get(str(game.id), {})
+
+        guess_colors_by_number = {}
+        if guesses:
+            secret_word = word.word
+            engine = WordleEngine(secret_word)
+            for guess in guesses:
+                colors = engine.submit_guess(guess.guessed_word)
+                guess_colors_by_number[str(guess.guess_number)] = [
+                    state.value if hasattr(state, "value") else str(state)
+                    for state in colors
+                ]
+
         return render_template(
             "game.html",
             game=game,
