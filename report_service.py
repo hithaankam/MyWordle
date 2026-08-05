@@ -45,29 +45,67 @@ def get_daily_report(report_date=None):
         session.close()
 
 
-def get_user_report(username):
+def get_user_report(username=None):
     session = SessionLocal()
 
     try:
+        if username is None:
+            users = session.query(User).all()
+            history = []
+
+            for user in users:
+                games = (
+                    session.query(Game)
+                    .filter(Game.user_id == user.id)
+                    .order_by(Game.started_at)
+                    .all()
+                )
+
+                grouped = defaultdict(
+                    lambda: {
+                        "words_tried": 0,
+                        "correct_guesses": 0
+                    }
+                )
+
+                for game in games:
+                    played_date = game.started_at.date()
+                    grouped[played_date]["words_tried"] += 1
+
+                    if game.status == "WON":
+                        grouped[played_date]["correct_guesses"] += 1
+
+                user_history = []
+                for played_date in sorted(grouped):
+                    user_history.append(
+                        {
+                            "date": played_date,
+                            "words_tried": grouped[played_date]["words_tried"],
+                            "correct_guesses": grouped[played_date]["correct_guesses"],
+                        }
+                    )
+
+                history.append(
+                    {
+                        "username": user.username,
+                        "history": user_history,
+                    }
+                )
+
+            return UserReport(success=True, history=history)
+
         user = (
             session.query(User)
-            .filter(
-                User.username.ilike(username)
-            )
+            .filter(User.username.ilike(username))
             .first()
         )
 
         if user is None:
-            return UserReport(
-                success=False,
-                errors=["User not found."]
-            )
+            return UserReport(success=False, errors=["User not found."])
 
         games = (
             session.query(Game)
-            .filter(
-                Game.user_id == user.id
-            )
+            .filter(Game.user_id == user.id)
             .order_by(Game.started_at)
             .all()
         )
@@ -81,27 +119,22 @@ def get_user_report(username):
 
         for game in games:
             played_date = game.started_at.date()
-
             grouped[played_date]["words_tried"] += 1
 
             if game.status == "WON":
                 grouped[played_date]["correct_guesses"] += 1
 
         history = []
-
         for played_date in sorted(grouped):
             history.append(
                 {
                     "date": played_date,
                     "words_tried": grouped[played_date]["words_tried"],
-                    "correct_guesses": grouped[played_date]["correct_guesses"]
+                    "correct_guesses": grouped[played_date]["correct_guesses"],
                 }
             )
 
-        return UserReport(
-            success=True,
-            history=history
-        )
+        return UserReport(success=True, history=history)
 
     finally:
         session.close()

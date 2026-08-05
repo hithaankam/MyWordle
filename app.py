@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 
 from config import Config
 
@@ -20,7 +20,7 @@ def create_app():
 
     @app.get("/")
     def index():
-        return "Wordle Backend Running"
+        return render_template("home.html")
 
     return app
 

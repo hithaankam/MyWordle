@@ -1,6 +1,7 @@
 from database import SessionLocal
 from models import Result, Game, Guess, Word
 from game_engine import WordleEngine
+from word_service import get_all_words
 
 
 def get_guesses(game_id):
@@ -41,6 +42,14 @@ def submit_guess(game_id, guess):
                 errors=["Game has already ended."]
             )
 
+        allowed_words = {word.upper() for word in get_all_words()}
+        normalized_guess = guess.upper().strip()
+        if normalized_guess not in allowed_words:
+            return Result(
+                success=False,
+                errors=["Guess must be a valid word from the game dictionary."]
+            )
+
         secret_word = (
             session.query(Word)
             .filter(Word.id == game.word_id)
@@ -62,7 +71,7 @@ def submit_guess(game_id, guess):
                 engine.submit_guess(previous_guess.guessed_word)
 
             # Submit current guess
-            colors = engine.submit_guess(guess)
+            colors = engine.submit_guess(normalized_guess)
 
         except ValueError as e:
             return Result(
@@ -74,7 +83,7 @@ def submit_guess(game_id, guess):
             Guess(
                 game_id=game.id,
                 guess_number=len(previous_guesses) + 1,
-                guessed_word=guess
+                guessed_word=normalized_guess
             )
         )
 
@@ -84,11 +93,11 @@ def submit_guess(game_id, guess):
 
         if engine.is_won():
             game.status = "WON"
-            message = "Congratulations! You guessed the word."
+            message = f"Congratulations! You guessed the word: {secret_word}."
 
         elif engine.is_lost():
             game.status = "LOST"
-            message = "Better luck next time."
+            message = f"Better luck next time. The word was {secret_word}."
 
         session.commit()
 

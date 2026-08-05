@@ -11,7 +11,7 @@ from random import choice
 DAILY_GAME_LIMIT = 3
 
 
-def start_game(username, word = None):
+def start_game(username, word=None):
     session = SessionLocal()
 
     try:
@@ -57,25 +57,32 @@ def start_game(username, word = None):
             row[0]
             for row in played_word_ids
         }
-        print("Total words:", session.query(Word).count())
-
         played = session.query(Game.word_id).filter(
             Game.user_id == user.id
         ).all()
-        print("Played word ids:", played)
 
-        available_words = (
-            session.query(Word)
-            .filter(~Word.id.in_({row[0] for row in played}))
-            .all()
-        )
+        if word is not None:
+            selected_word = (
+                session.query(Word)
+                .filter(func.upper(Word.word) == word.upper())
+                .first()
+            )
+            if selected_word is None:
+                return Result(
+                    success=False,
+                    errors=["Word not found."]
+                )
+        else:
+            available_words = (
+                session.query(Word)
+                .filter(~Word.id.in_({row[0] for row in played}))
+                .all()
+            )
 
-        print("Available words:", [w.word for w in available_words])
+            if not available_words:
+                available_words = session.query(Word).all()
 
-        if not available_words:
-            available_words = session.query(Word).all()
-
-        selected_word = choice(available_words)
+            selected_word = choice(available_words)
 
         game = Game(
             user_id=user.id,
