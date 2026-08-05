@@ -3,6 +3,16 @@ from auth import register_user
 from game_service import start_game
 
 
+def test_home_page_renders():
+    app = create_app()
+    client = app.test_client()
+
+    response = client.get("/")
+
+    assert response.status_code == 200
+    assert b"Play Wordle" in response.data
+
+
 def test_login_page_renders():
     app = create_app()
     client = app.test_client()

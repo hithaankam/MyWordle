@@ -50,10 +50,10 @@ def test_multiple_guesses_are_saved_in_order():
         confirm_password="Pass1$"
     )
 
-    game = start_game("GuessPlayer03")
+    game = start_game("GuessPlayer03", word="APPLE")
 
-    submit_guess(game.game_id, "APPLE")
     submit_guess(game.game_id, "HOUSE")
+    submit_guess(game.game_id, "MOUSE")
 
     guesses = get_guesses(game.game_id)
 
@@ -103,11 +103,11 @@ def test_cannot_submit_guess_after_game_is_over():
         confirm_password="Pass1$"
     )
 
-    game = start_game("GuessPlayer06")
+    game = start_game("GuessPlayer06", word="APPLE")
 
     # Lose the game
     for _ in range(5):
-        submit_guess(game.game_id, "ZZZZZ")
+        submit_guess(game.game_id, "HOUSE")
 
     result = submit_guess(
         game.game_id,
@@ -139,10 +139,10 @@ def test_game_status_changes_to_lost():
         confirm_password="Pass1$"
     )
 
-    game = start_game("GuessPlayer08")
+    game = start_game("GuessPlayer08", word="APPLE")
 
     for _ in range(5):
-        submit_guess(game.game_id, "ZZZZZ")
+        submit_guess(game.game_id, "HOUSE")
 
     game = get_game(game.game_id)
 
@@ -155,11 +155,11 @@ def test_game_returns_active_status_after_wrong_guess():
         confirm_password="Pass1$"
     )
 
-    game = start_game("GuessPlayer09")
+    game = start_game("GuessPlayer09", word="APPLE")
 
     result = submit_guess(
         game.game_id,
-        "ZZZZZ"
+        "HOUSE"
     )
 
     assert result.success
@@ -185,7 +185,7 @@ def test_game_returns_win_status():
 
     assert result.success
     assert result.game_status == "WON"
-    assert result.message == "Congratulations! You guessed the word."
+    assert result.message == "Congratulations! You guessed the word: APPLE."
 
 def test_game_returns_loss_status():
     register_user(
@@ -200,13 +200,28 @@ def test_game_returns_loss_status():
     )
 
     for _ in range(4):
-        submit_guess(game.game_id, "ZZZZZ")
+        submit_guess(game.game_id, "HOUSE")
 
     result = submit_guess(
         game.game_id,
-        "ZZZZZ"
+        "HOUSE"
     )
 
     assert result.success
     assert result.game_status == "LOST"
-    assert result.message == "Better luck next time."
+    assert result.message == "Better luck next time. The word was APPLE."
+
+
+def test_non_dictionary_guess_is_rejected():
+    register_user(
+        username="GuessPlayer12",
+        password="Pass1$",
+        confirm_password="Pass1$"
+    )
+
+    game = start_game("GuessPlayer12", word="APPLE")
+
+    result = submit_guess(game.game_id, "ZZZZZ")
+
+    assert result.success is False
+    assert "valid word from the game dictionary" in result.errors[0]
